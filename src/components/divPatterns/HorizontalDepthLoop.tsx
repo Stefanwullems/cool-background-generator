@@ -1,24 +1,32 @@
 import * as React from "react";
 
-interface ICoolPatternProps {
-  loops: number;
-  depth: number;
+interface IState {
+  background: string;
+  newBackground: string;
+  alpha: number;
 }
 
-class HorizontalDepthLoop extends React.Component {
-  createCoolPattern({ loops = 0, depth = 0 }: ICoolPatternProps) {
-    const root = this.getRoot(25, depth);
-    const list = this.getList(root, depth);
+class HorizontalDepthLoop extends React.Component<{}, IState> {
+  state = {
+    background: "linear-gradient(to right, #1d2b64, #f8cdda)",
+    newBackground: "linear-gradient(to right, #1d2b64, #f8cdda)",
+    alpha: 0.2
+  };
+
+  createCoolPattern(loops: number = 0, depth: number = 0): JSX.Element[] {
+    const list = this.getList([25, 25], depth);
 
     const loop = list.map((num, i) => {
       const step =
-        i < depth + 2 ? i % (depth + 2) : depth + 1 - (i % (depth + 2));
+        i < depth + 2 ? i % (depth + 2) : depth + 2 - (i % (depth + 2));
 
-      const colorNum = 255 - (255 / (depth + 2)) * step;
+      const colorNum = (255 / (depth + 2)) * step;
       return (
         <div
           style={{
-            background: `rgba(${colorNum}, ${colorNum}, ${colorNum}, 1)`,
+            background: `rgba(${colorNum}, ${colorNum}, ${colorNum}, ${
+              this.state.alpha
+            })`,
             width: "100%",
             height: `${num / loops}vh`
           }}
@@ -26,7 +34,7 @@ class HorizontalDepthLoop extends React.Component {
       );
     });
 
-    let arr = [];
+    let arr: JSX.Element[] = [];
     for (let i = 0; i < loops; i++) {
       arr = [...arr, ...loop];
     }
@@ -34,25 +42,52 @@ class HorizontalDepthLoop extends React.Component {
     return arr;
   }
 
-  getList(arr, depth = 0) {
+  getList(arr: number[], depth: number = 0): number[] {
     if (depth === 0) {
-      return arr;
+      const num = arr[0] / 2;
+      return [num, num, ...arr, num, num];
     }
-    const timesTwo = 2 * arr[0];
-    return this.getList([timesTwo, ...arr, timesTwo], depth - 1);
+    const num = arr[0] / 2;
+    return this.getList([num, ...arr, num], depth - 1);
   }
 
-  getRoot(num, depth = 0) {
-    if (depth === 0) {
-      return [num, num, num, num];
-    }
-    return this.getRoot(num / 2, depth - 1);
+  onChange(e) {
+    this.setState({
+      newBackground: e.target.value
+    });
   }
+
+  useBackground() {
+    const { newBackground } = this.state;
+    this.setState({
+      background: newBackground
+    });
+  }
+
   render() {
     return (
-      <React.Fragment>
-        <div>{this.createCoolPattern({ loops: 10, depth: 10 })}</div>
-      </React.Fragment>
+      <div
+        style={{
+          background: this.state.background
+        }}
+      >
+        {this.createCoolPattern(10, 10)}
+        <div style={{ paddingTop: "49vh", paddingBottom: "49vh" }}>
+          <h1>Change the background</h1>
+          <input
+            type="text"
+            onChange={this.onChange.bind(this)}
+            value={this.state.newBackground}
+            style={{ width: "30vw", height: "100%" }}
+          />
+          <button
+            style={{ width: "5vw", height: "100%" }}
+            onClick={this.useBackground.bind(this)}
+          >
+            Use
+          </button>
+        </div>
+      </div>
     );
   }
 }
