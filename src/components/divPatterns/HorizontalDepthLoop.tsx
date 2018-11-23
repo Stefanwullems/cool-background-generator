@@ -8,7 +8,7 @@ interface IState {
 
 class HorizontalDepthLoop extends React.Component<{}, IState> {
   state = {
-    background: "linear-gradient(to right, #1d2b64, #f8cdda)",
+    background: "linear-gradient(to right, #757f9a, #d7dde8)",
     newBackground: "linear-gradient(to right, #1d2b64, #f8cdda)",
     alpha: 0.2
   };
@@ -72,7 +72,7 @@ class HorizontalDepthLoop extends React.Component<{}, IState> {
         }}
       >
         {this.createCoolPattern(10, 10)}
-        <div style={{ paddingTop: "49vh", paddingBottom: "49vh" }}>
+        {/* <div style={{ paddingTop: "49vh", paddingBottom: "49vh" }}>
           <h1>Change the background</h1>
           <input
             type="text"
@@ -86,7 +86,7 @@ class HorizontalDepthLoop extends React.Component<{}, IState> {
           >
             Use
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }
