@@ -1,1 +1,1 @@
-# react-misc
+# Cool-Background-Generator
